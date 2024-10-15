@@ -1,2 +1,14 @@
 # Router-Dataplane-in-c
 Packet Routing Process- Efficient Longest Prefix Match (LPM)-ARP Protocol-ICMP Protocol
+This project implements a router with several key functionalities:
+
+    Packet Routing Process: The router listens for packets on all interfaces in a loop. Upon receiving a packet, it checks if it is an IPv4 packet not destined for the router itself. If the packet needs to be forwarded, it verifies the checksum and TTL, then uses the get_best_route function to determine the next hop. If the next hop and its MAC address are found, the packet is forwarded accordingly.
+
+    Efficient Longest Prefix Match (LPM): The router employs binary search for LPM, with routing table entries sorted in descending order by prefix. Since more specific prefixes are larger, the search efficiently narrows down to the most accurate match.
+
+    ARP Protocol: The ARP functionality is divided into three functions:
+        generate_arp_reply: Responds to ARP requests by swapping sender and target addresses and placing the router's MAC in the response.
+        generate_arp_request: Called when the MAC address of the next hop is missing from the ARP table, it queues the current packet and sends an ARP request to find the necessary MAC address.
+        process_arp_reply: Adds a new entry to the ARP table upon receiving a reply and forwards all queued packets waiting for that address.
+
+    ICMP Protocol: The generate_icmp_packet function creates ICMP packets, which are used when errors are encountered or when an "echo reply" is needed. The function generates ICMP packets with the appropriate type and code based on the error or request.
